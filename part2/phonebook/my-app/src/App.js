@@ -3,28 +3,37 @@ import Person from './component/Person'
 
 const App = () => {
   const [ persons, setPersons] = useState([
-    { name: 'Arto Hellas' }
+    { name: 'Arto Hellas', number: '0102298029' }
   ]) 
   const [ newName, setNewName ] = useState('')
+  const [ newNumber, setNewNumber ] = useState('')
   
   const addName = (event) => {
     event.preventDefault()
     const hasMatch = persons.some(item => item.name === newName)
     if(!hasMatch) {
       const personObj = {
-        name: newName
+        name: newName,
+        number: newNumber
       }
       setPersons(persons.concat(personObj))
       setNewName('')
+      setNewNumber('')
     } else {
       alert(`${newName} is already added to phonebook`)
       setNewName('')
     }
   }
 
-  const handleChange = (e) => {
+  const handleNameChange = (e) => {
     if(e.type === 'change') {
       setNewName(e.target.value)
+    } 
+  }
+
+  const handleNumberChange = (e) => {
+    if(e.type === 'change') {
+      setNewNumber(e.target.value)
     } 
   }
 
@@ -34,7 +43,8 @@ const App = () => {
       <h2>Phonebook</h2>
       <form onSubmit={addName}>
         <div>
-          name: <input value ={newName} onChange={handleChange} />
+          name: <input value ={newName} onChange={handleNameChange} />
+          <div>number: <input onChange={handleNumberChange} /></div>
         </div>
         <div>
           <button type="submit">add</button>
