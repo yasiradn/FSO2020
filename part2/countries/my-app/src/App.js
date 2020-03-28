@@ -20,13 +20,15 @@ const url = `https://restcountries.eu/rest/v2/name/${value}`
 
         if(getDataSize === 1){
           setInfo('')
+          setName('')
           setResult(res.data)
         }else if(getDataSize < 10 ){
-         setName(res.data)
-         setResult('')
-         setInfo('')
+          setResult('')
+          setInfo('') 
+          setName(res.data)
         }else {
           setResult('')
+          setName('')
           setInfo('Too many matches, specify another filter')
         }
     }).catch(err => {
@@ -36,17 +38,19 @@ const url = `https://restcountries.eu/rest/v2/name/${value}`
 
   const HandleChange = (e) => {
     setValue(e.target.value)
-    
+
   }
 
-const showInfo = result.length === 0 ? getName.map((res, i) => <ShowName key={i} country={res} />):result.map((res, i) => <Country key={i} country={res} />)
+  const showNames = getName.length === 0 ? '' : getName.map((res, i) => <ShowName key={i} country={res} />)
+const showInfo = result.length === 0 ? '' : result.map((res, i) => <Country key={i} country={res} />)
 
   return (
     <div>
-      <p>find countrie</p>
+      <p>find country</p>
       <input onChange={HandleChange}/>
       <p>{info}</p>
       {showInfo}
+      {showNames}
     </div>
   )
 }
