@@ -41,7 +41,8 @@ const url = `https://restcountries.eu/rest/v2/name/${value}`
 
   }
 
-  const showNames = getName.length === 0 ? '' : getName.map((res, i) => <ShowName key={i} country={res} />)
+const showNames = getName.length === 0 ? '' : getName.map((res, i) => <ShowName key={i} country={res} />)
+
 const showInfo = result.length === 0 ? '' : result.map((res, i) => <Country key={i} country={res} />)
 
   return (
