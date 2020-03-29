@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
-import axios from 'axios'
 import Country from './component/Country'
 import ShowName from './component/ShowName'
+import axios from 'axios'
 
 const App = () => {
 
@@ -11,8 +11,6 @@ const [getName, setName] = useState([])
 const [info, setInfo] = useState('')
 
 const url = `https://restcountries.eu/rest/v2/name/${value}`
-
-
 
   useEffect(()=> {
     axios.get(url).then(res => {
