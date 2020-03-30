@@ -20,22 +20,35 @@ const App = () => {
   
   const addName = (event) => {
     event.preventDefault()
-    const hasMatch = persons.some(item => item.name === newName)
+    const hasMatch = persons.some(item => item.name === newName) ? persons.find(({name}) => name === newName) : false
     if(!hasMatch) {
-      const personObj = {
-        name: newName,
-        number: newNumber
-      }
+      const personObj = { name:newName, number:newNumber }
       contacts.create(personObj).then(res => {
         setPersons(persons.concat(res))
-        setNewName('')
-        setNewNumber('')
+        clearInputFields()
       })
 
     } else {
-      alert(`${newName} is already added to phonebook`)
-      setNewName('')
+      const result = window.confirm((`${newName} is already added to phonebook, replace the old number?`))
+      if(result){
+        const personObj = {
+          name: hasMatch.name,
+          number: newNumber}
+        
+        contacts.UpdateData(hasMatch.id, personObj).then(res => {
+          setPersons(persons.concat(res))
+          clearInputFields()
+        })
+      }else{
+        clearInputFields()
+      }
+      
     }
+  }
+
+  const clearInputFields = () => {
+      setNewName('')
+      setNewNumber('')
   }
 
   const handleNameChange = (e) => {

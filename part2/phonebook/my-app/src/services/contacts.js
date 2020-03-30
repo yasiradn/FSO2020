@@ -15,6 +15,11 @@ const create = newObject => {
     const request = axios.delete(`${url}/${id}`)
     return request.then(response => response.statusText)
   }
+
+  const UpdateData = (id, newObject) => {
+    const request = axios.put(`${url}/${id}`, newObject)
+    return request.then(response => response.data)
+  }
   
   
-export default {FetchAll, create,DeleteData}
+export default {FetchAll, create,DeleteData, UpdateData}
