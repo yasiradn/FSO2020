@@ -10,5 +10,11 @@ const create = newObject => {
     const request = axios.post(url, newObject)
     return request.then(response => response.data)
   }
+
+  const DeleteData = id => {
+    const request = axios.delete(`${url}/${id}`)
+    return request.then(response => response.statusText)
+  }
   
-export default {FetchAll, create}
+  
+export default {FetchAll, create,DeleteData}

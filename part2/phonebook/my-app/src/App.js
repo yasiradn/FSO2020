@@ -5,6 +5,7 @@ import PersonForm from './component/PersonForm'
 import contacts from './services/contacts'
 
 const App = () => {
+
   const[persons, setPersons] = useState([])
   const [ newName, setNewName ] = useState('')
   const [ newNumber, setNewNumber ] = useState('')
@@ -14,7 +15,7 @@ const App = () => {
     contacts.FetchAll().then(response => {
       setPersons(response)
     })
-  },[])
+  },[persons])
 
   
   const addName = (event) => {
@@ -53,11 +54,23 @@ const App = () => {
       setFilterName(e.target.value)
     } 
   }
+
+  const handleDelete = (i, name) => {
+    const result = window.confirm(`Delete ${name}`)
+    if(result){
+      contacts.DeleteData(i).then(response => {
+        if(response === 'OK') {
+          console.log('Deleted')
+        }
+       })
+    }
+  }
+
   const hasMatch = persons.some(item => item = item.name === filterContact) ? persons.find(( {name}) => name.toLowerCase() === filterContact.toLowerCase()) : ''
   /**
    * Filtering - Unless it finds the exact match it will show all avilable numbers
    */
-  const getFilteredContact = hasMatch === '' ? persons.map((person,i)=> <Person key={i} person={person}/> ):<Person person={hasMatch}/>
+  const getFilteredContact = hasMatch === '' ? persons.map((person,i)=> <Person key={i} person={person} onClickDelete={()=>handleDelete(person.id,person.name)}/> ):<Person person={hasMatch} onClickDelete={()=>handleDelete(hasMatch.id,hasMatch.name)}/>
   return (
     <div>
       <Filter value = {filterContact} onChange={handleFilter}/>
