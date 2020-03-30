@@ -11,6 +11,7 @@ const App = () => {
   const [ newNumber, setNewNumber ] = useState('')
   const [ filterContact, setFilterName ] = useState('')
   const [errMsg, setErrMsg] = useState('')
+  const [showMsg, setMsg] = useState('')
 
   useEffect(()=>{
     contacts.FetchAll().then(response => {
@@ -19,9 +20,11 @@ const App = () => {
   },[persons])
 
   const ShowMessage = ({message}) => {
-    console.log(message)
-      return (message === '') ? '': <div className="errorMessage">{message}</div>
+      return (message === '') ? '': <div className="showMessage">{message}</div>
   }
+  const ErrorMessage = ({message}) => {
+    return (message === '') ? '': <div className="errorMessage">{message}</div>
+}
   const addName = (event) => {
     event.preventDefault()
     const hasMatch = persons.some(item => item.name === newName) ? persons.find(({name}) => name === newName) : false
@@ -29,16 +32,17 @@ const App = () => {
       const personObj = { name:newName, number:newNumber }
       contacts.create(personObj).then(res => {
         setPersons(persons.concat(res))
-        setErrMsg(`${newName} Added`)
+        setMsg(`${newName} Added`)
         clearInputFields()
         setTimeout(() => {
-          setErrMsg('')
+          setMsg('')
         }, 2000)
       })
 
     } else {
       const result = window.confirm((`${newName} is already added to phonebook, replace the old number?`))
       if(result){
+        console.log('Updating....')
         const personObj = {
           name: hasMatch.name,
           number: newNumber}
@@ -46,6 +50,12 @@ const App = () => {
         contacts.UpdateData(hasMatch.id, personObj).then(res => {
           setPersons(persons.concat(res))
           clearInputFields()
+        }).catch(err=>{
+          console.log('Fail')
+          setErrMsg(`Informartion of ${hasMatch.name} has been already removed from server`)
+          setTimeout(() => {
+          setErrMsg('')
+        }, 2000)
         })
       }else{
         clearInputFields()
@@ -79,11 +89,11 @@ const App = () => {
   const handleDelete = (i, name) => {
     const result = window.confirm(`Delete ${name}`)
     if(result){
-      contacts.DeleteData(i).then(response => {
-        if(response === 'OK') {
-          console.log('Deleted')
-        }
-       })
+        contacts.DeleteData(i).then(response => {
+          if(response === 'OK') {
+            console.log('Deleted')
+          }
+         })
     }
   }
 
@@ -94,7 +104,8 @@ const App = () => {
   const getFilteredContact = hasMatch === '' ? persons.map((person,i)=> <Person key={i} person={person} onClickDelete={()=>handleDelete(person.id,person.name)}/> ):<Person person={hasMatch} onClickDelete={()=>handleDelete(hasMatch.id,hasMatch.name)}/>
   return (
     <div>
-      <ShowMessage message={errMsg}/>
+      <ErrorMessage message={errMsg}/>
+      <ShowMessage message = {showMsg}/>
       <Filter value = {filterContact} onChange={handleFilter}/>
       <h2>Phonebook</h2>
       <PersonForm
