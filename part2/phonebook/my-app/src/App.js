@@ -42,7 +42,6 @@ const App = () => {
     } else {
       const result = window.confirm((`${newName} is already added to phonebook, replace the old number?`))
       if(result){
-        console.log('Updating....')
         const personObj = {
           name: hasMatch.name,
           number: newNumber}
@@ -51,7 +50,6 @@ const App = () => {
           setPersons(persons.concat(res))
           clearInputFields()
         }).catch(err=>{
-          console.log('Fail')
           setErrMsg(`Informartion of ${hasMatch.name} has been already removed from server`)
           setTimeout(() => {
           setErrMsg('')
