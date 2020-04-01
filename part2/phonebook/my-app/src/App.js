@@ -37,6 +37,8 @@ const App = () => {
         setTimeout(() => {
           setMsg('')
         }, 2000)
+      }).catch(err => {
+        setErrorMessage(err.response.data.error)
       })
 
     } else {
@@ -50,10 +52,7 @@ const App = () => {
           setPersons(persons.concat(res))
           clearInputFields()
         }).catch(err=>{
-          setErrMsg(`Informartion of ${hasMatch.name} has been already removed from server`)
-          setTimeout(() => {
-          setErrMsg('')
-        }, 2000)
+          setErrorMessage(`Informartion of ${hasMatch.name} has been already removed from server`)
         })
       }else{
         clearInputFields()
@@ -65,6 +64,13 @@ const App = () => {
   const clearInputFields = () => {
       setNewName('')
       setNewNumber('')
+  }
+
+  const setErrorMessage = (message) => {
+    setErrMsg(message)
+        setTimeout(() => {
+          setErrMsg('')
+        }, 2000)
   }
 
   const handleNameChange = (e) => {
@@ -83,7 +89,7 @@ const App = () => {
       setFilterName(e.target.value)
     } 
   }
-
+  
   const handleDelete = (i, name) => {
     const result = window.confirm(`Delete ${name}`)
     if(result){
@@ -99,7 +105,7 @@ const App = () => {
   /**
    * Filtering - Unless it finds the exact match it will show all avilable numbers
    */
-  const getFilteredContact = hasMatch === '' ? persons.map((person,i)=> <Person key={i} person={person} onClickDelete={()=>handleDelete(person.id,person.name)}/> ):<Person person={hasMatch} onClickDelete={()=>handleDelete(hasMatch.id,hasMatch.name)}/>
+  const getFilteredContact = hasMatch === '' ? persons.map(person=> <Person key={person.id} person={person} onClickDelete={()=>handleDelete(person.id,person.name)}/> ):<Person person={hasMatch} onClickDelete={()=>handleDelete(hasMatch.id,hasMatch.name)}/>
   return (
     <div>
       <ErrorMessage message={errMsg}/>
